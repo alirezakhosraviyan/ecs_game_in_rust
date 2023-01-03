@@ -8,4 +8,6 @@ pub enum CustomError {
     UnregisteredComponentAdded,
     #[error("Can not delete the specified resource")]
     CanNotDeleteResource,
+    #[error("Component Not Found")]
+    ComponentNotFound,
 }

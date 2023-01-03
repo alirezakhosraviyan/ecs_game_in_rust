@@ -11,6 +11,8 @@ pub struct Resource {
 }
 
 impl Resource {
+
+    /// returns the data spot in the resource
     pub fn get_data(&self) -> &HashMap<TypeId, Box<dyn Any>> {
         &self.data
     }

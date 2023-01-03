@@ -11,14 +11,14 @@ use eyre::Result;
 pub struct Entity {
     pub components: HashMap<TypeId, Vec<Option<Rc<RefCell<dyn Any>>>>>,
     pub bitmask: HashMap<TypeId, u32>,
-    pub bitmap: Vec<u32>
+    pub bitmap: Vec<u32>,
 }
 
 impl Entity {
     pub fn register_component<T: Any + 'static>(&mut self) {
         let type_id = TypeId::of::<T>();
-        self.components.insert(type_id.clone(), vec![]);
-        self.bitmask.insert(type_id.clone(), 2u32.pow(self.bitmask.keys().len() as u32));
+        self.components.insert(type_id, vec![]);
+        self.bitmask.insert(type_id, 2u32.pow(self.bitmask.keys().len() as u32));
     }
 
     pub fn create_entity(&mut self) -> &mut Self {
@@ -34,7 +34,7 @@ impl Entity {
         let val = data.last_mut().ok_or(CustomError::CreateComponentNeverCalled)?;
         *val = Some(Rc::new(RefCell::new(component)));
 
-        let mut last_bitmap = self.bitmap.last_mut().unwrap();
+        let last_bitmap = self.bitmap.last_mut().unwrap();
         *last_bitmap |= *bitmask_index;
 
         Ok(self)
@@ -42,6 +42,10 @@ impl Entity {
 
     pub fn get_bitmask(&self, type_id: &TypeId) -> Option<u32> {
         self.bitmask.get(type_id).copied()
+    }
+
+    pub fn get_component(&self, type_id: &TypeId) -> &Vec<Option<Rc<RefCell<dyn Any>>>> {
+        self.components.get(type_id).unwrap()
     }
 }
 
@@ -72,7 +76,6 @@ mod tests {
         let mask = entity.bitmask.get(&TypeId::of::<Test2Component>()).unwrap();
         assert_eq!(*mask, 2);
     }
-
 
 
     #[test]
@@ -106,7 +109,6 @@ mod tests {
         let test_component = TestComponent(12);
         let is_error = entity.create_entity().with_component(test_component).is_err();
         assert!(is_error);
-
     }
 
     #[test]

@@ -1,4 +1,4 @@
-use std::any::{Any, TypeId};
+use std::any::{TypeId};
 use ecs_game_in_rust::World;
 
 struct TestComponent(u8);

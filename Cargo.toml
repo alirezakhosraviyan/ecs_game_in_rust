@@ -1,6 +1,6 @@
 [package]
 name = "ecs_game_in_rust"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "This is a Entity Compnent System map for games (a simple test for rust programming)"
 license = "MIT"
